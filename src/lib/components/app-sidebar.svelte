@@ -12,7 +12,6 @@
           {
             title: "Income Management",
             url: "/incomes",
-            isActive: true,
           },
           {
             title: "Budgeting",
@@ -38,10 +37,25 @@
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import PhilippinePesoIcon from "@lucide/svelte/icons/philippine-peso";
   import type { ComponentProps } from "svelte";
+  import { page } from "$app/state";
+
   let {
     ref = $bindable(null),
     ...restProps
   }: ComponentProps<typeof Sidebar.Root> = $props();
+
+  function isActive(url: string) {
+    return page.url.pathname === url;
+  }
+
+  function isSubActive(url: string) {
+    return page.url.pathname === url || page.url.pathname.startsWith(`${url}/`);
+  }
+
+  function isGroupActive(items?: { url: string }[]) {
+    if (!items) return false;
+    return items.some((item) => isSubActive(item.url));
+  }
 </script>
 
 <Sidebar.Root {...restProps} bind:ref>
@@ -66,25 +80,30 @@
       </Sidebar.MenuItem>
     </Sidebar.Menu>
   </Sidebar.Header>
+
   <Sidebar.Content>
     <Sidebar.Group>
       <Sidebar.Menu>
         {#each data.navMain as item (item.title)}
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton class="font-medium">
+            <Sidebar.MenuButton
+              class="font-medium"
+              isActive={isGroupActive(item.items)}
+            >
               {#snippet child({ props })}
-                <a href={item.url} {...props}>
-                  {item.title}
-                </a>
+                <span {...props}>{item.title}</span>
               {/snippet}
             </Sidebar.MenuButton>
+
             {#if item.items?.length}
               <Sidebar.MenuSub>
                 {#each item.items as subItem (subItem.title)}
                   <Sidebar.MenuSubItem>
-                    <Sidebar.MenuSubButton isActive={subItem.isActive}>
+                    <Sidebar.MenuSubButton isActive={isSubActive(subItem.url)}>
                       {#snippet child({ props })}
-                        <a href={subItem.url} {...props}>{subItem.title}</a>
+                        <a href={subItem.url} {...props}>
+                          {subItem.title}
+                        </a>
                       {/snippet}
                     </Sidebar.MenuSubButton>
                   </Sidebar.MenuSubItem>
