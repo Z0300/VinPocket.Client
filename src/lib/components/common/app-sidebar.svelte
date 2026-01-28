@@ -44,10 +44,6 @@
     ...restProps
   }: ComponentProps<typeof Sidebar.Root> = $props();
 
-  function isActive(url: string) {
-    return page.url.pathname === url;
-  }
-
   function isSubActive(url: string) {
     return page.url.pathname === url || page.url.pathname.startsWith(`${url}/`);
   }
