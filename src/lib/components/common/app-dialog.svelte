@@ -1,21 +1,13 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import * as AlertDialog from "$lib/components/ui/alert-dialog/index.js";
-  import { buttonVariants } from "../ui/button";
+  import DeleteIcon from "@lucide/svelte/icons/trash-2";
 
   export let title: string = "Are you absolutely sure?";
 
   export let description: string =
     "This action cannot be undone. This will permanently delete your account and remove your data from our servers.";
 
-  export let triggerText: string = "Open";
-
-  export let triggerVariant:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link" = "default";
   export let confirmText: string = "Confirm";
   export let cancelText: string = "Cancel";
 
@@ -25,8 +17,10 @@
 </script>
 
 <AlertDialog.Root>
-  <AlertDialog.Trigger class={buttonVariants({ variant: triggerVariant })}
-    >{triggerText}</AlertDialog.Trigger
+  <AlertDialog.Trigger
+    ><DeleteIcon
+      class="w-4 h-4 cursor-pointer text-red-700"
+    /></AlertDialog.Trigger
   >
   <AlertDialog.Content>
     <AlertDialog.Header>
@@ -37,7 +31,7 @@
     </AlertDialog.Header>
     <AlertDialog.Footer>
       <AlertDialog.Cancel>{cancelText}</AlertDialog.Cancel>
-      <form {action} method="post">
+      <form {action} method="post" use:enhance>
         <input type="hidden" {name} {value} />
         <AlertDialog.Action type="submit">{confirmText}</AlertDialog.Action>
       </form>

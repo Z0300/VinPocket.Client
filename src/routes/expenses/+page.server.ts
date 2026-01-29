@@ -1,5 +1,5 @@
-import type { PageServerLoad } from "./$types";
-import { get } from "$lib/client";
+import type { Actions, PageServerLoad } from "./$types";
+import { get, remove } from "$lib/client";
 import type { Expense } from "$lib/types/Expense";
 import type { PaginatedResponse } from "$lib/types/Paginated";
 
@@ -20,3 +20,11 @@ export const load: PageServerLoad = async ({ url }) => {
 
   return { response };
 };
+
+export const actions = {
+  delete: async ({ request }) => {
+    const formData = await request.formData();
+    const id = formData.get("id");
+    await remove(`/api/expenses/${id}`);
+  },
+} satisfies Actions;

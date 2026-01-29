@@ -45,7 +45,8 @@
   }: ComponentProps<typeof Sidebar.Root> = $props();
 
   function isSubActive(url: string) {
-    return page.url.pathname === url || page.url.pathname.startsWith(`${url}/`);
+    const current = page.url.pathname;
+    return current === url || current.startsWith(`${url}/`);
   }
 
   function isGroupActive(items?: { url: string }[]) {
