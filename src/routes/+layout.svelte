@@ -1,12 +1,11 @@
 <script lang="ts">
   import "./layout.css";
-
   import AppSidebar from "$lib/components/common/app-sidebar.svelte";
   import * as Sidebar from "$lib/components/ui/sidebar";
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
   import { Separator } from "$lib/components/ui/separator";
-
   import { getBreadcrumbs } from "$lib/breadcrumbs";
+  import { Toaster } from "svelte-french-toast";
 
   let { children } = $props();
 
@@ -43,5 +42,6 @@
     </header>
 
     {@render children()}
+    <Toaster />
   </Sidebar.Inset>
 </Sidebar.Provider>
