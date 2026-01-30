@@ -1,7 +1,8 @@
 import { PaymentMethod } from "$lib/types/enums/PaymentMethod";
 import { z } from "zod";
 
-export const createExpenseSchema = z.object({
+export const updateExpenseSchema = z.object({
+  id: z.string().nonempty("Please provide a valid expense ID"),
   categoryId: z.string().nonempty("Please select a valid category"),
   payment: z.enum(PaymentMethod, {
     error: "Please select a valid payment method",
@@ -15,4 +16,4 @@ export const createExpenseSchema = z.object({
   }),
 });
 
-export type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
+export type UpdateExpenseSchema = z.infer<typeof updateExpenseSchema>;

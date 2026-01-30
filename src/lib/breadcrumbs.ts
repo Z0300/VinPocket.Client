@@ -16,8 +16,10 @@ const titleMap: Record<string, string> = {
   create: "Create",
 };
 
-function isId(segment: string) {
-  return /^\d+$/.test(segment);
+const staticSegments = new Set(["new", "create", "edit"]);
+
+function isDynamicSegment(segment: string) {
+  return !staticSegments.has(segment);
 }
 
 export function getBreadcrumbs(): Crumb[] {
@@ -31,7 +33,7 @@ export function getBreadcrumbs(): Crumb[] {
 
     let key = path;
 
-    if (i > 0 && isId(segment)) {
+    if (i > 0 && isDynamicSegment(segment)) {
       key = segments.slice(0, i).join("/") + "/[id]";
     }
 
@@ -39,8 +41,16 @@ export function getBreadcrumbs(): Crumb[] {
       key = segments.slice(0, i).join("/") + "/new";
     }
 
+    const normalizedKey = key.startsWith("/") ? key.slice(1) : key;
+    const isLast = i === segments.length - 1;
+
+    const label =
+      isLast && page.data?.breadcrumb
+        ? page.data.breadcrumb
+        : (titleMap[normalizedKey] ?? capitalize(segment));
+
     crumbs.push({
-      label: page.data?.breadcrumb ?? titleMap[key] ?? capitalize(segment),
+      label,
       href: path,
     });
   });

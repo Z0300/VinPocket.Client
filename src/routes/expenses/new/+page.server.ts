@@ -19,6 +19,7 @@ export const actions = {
 
     if (!result.success) {
       const errors = z.treeifyError(result.error);
+      console.log(errors.properties);
       return fail(400, errors.properties);
     }
 
