@@ -1,14 +1,15 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { goto } from "$app/navigation";
-  import { Button } from "$lib/components/ui/button/index";
-  import * as Field from "$lib/components/ui/field/index";
-  import { Input } from "$lib/components/ui/input/index";
-  import * as Select from "$lib/components/ui/select/index";
-  import { Textarea } from "$lib/components/ui/textarea/index";
-  import { PaymentMethod } from "$lib/types/enums/PaymentMethod";
-  import { getPaymentMethodLabel } from "$lib/utils";
   import toast from "svelte-french-toast";
+  import * as Field from "$lib/components/ui/field/index";
+  import * as Select from "$lib/components/ui/select/index";
+  import { PaymentMethod } from "$lib/types/enums/PaymentMethod.js";
+  import { getPaymentMethodLabel } from "$lib/utils.js";
+  import { Input } from "$lib/components/ui/input/index";
+  import { Textarea } from "$lib/components/ui/textarea/index";
+  import { Button } from "$lib/components/ui/button/index";
+  import { goto } from "$app/navigation";
+  import type { PageProps } from "./$types";
 
   const categories = [
     { value: "c_019be4c9-4432-782d-8f50-6eb0bb2e516f", label: "Food" },
@@ -16,6 +17,15 @@
 
   let categoryValue = $state("");
   let paymentMethodValue = $state("");
+
+  let { form, data }: PageProps = $props();
+
+  $effect(() => {
+    if (data.expense) {
+      categoryValue = data.expense.category.id.toString();
+      paymentMethodValue = data.expense.payment.toString();
+    }
+  });
 
   const triggerContent = $derived(
     categories.find((c) => c.value === categoryValue)?.label ??
@@ -31,8 +41,6 @@
       ? getPaymentMethodLabel(Number(paymentMethodValue) as PaymentMethod)
       : "Select a payment method",
   );
-
-  let { form } = $props();
 </script>
 
 <div class="flex flex-col p-10">
@@ -45,7 +53,7 @@
         use:enhance={() => {
           return async ({ result, update }) => {
             if (result.type === "success") {
-              toast.success("Expense created successfully!");
+              toast.success("Expense updated successfully!");
               await update();
             } else {
               await update();
@@ -114,6 +122,7 @@
               type="number"
               aria-invalid={!!form?.amount}
               placeholder="0.00"
+              value={data.expense.amount}
               name="amount"
             />
           </Field.Field>
@@ -125,6 +134,9 @@
               type="date"
               aria-invalid={!!form?.expenseDate}
               name="expenseDate"
+              value={new Date(data.expense.expenseDate)
+                .toISOString()
+                .split("T")[0]}
               class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </Field.Field>
@@ -136,6 +148,7 @@
               aria-invalid={!!form?.description}
               name="description"
               placeholder="Enter description"
+              value={data.expense.description}
               class="w-full"
             />
           </Field.Field>
@@ -147,18 +160,23 @@
             <Button variant="outline" onclick={() => goto("/expenses")}
               >Cancel</Button
             >
-            <Button type="submit">Create</Button>
+            <Button type="submit">Update</Button>
           </Field.Field>
         </Field.Group>
       </form>
     </div>
 
-    {#if (form?.categoryId?.errors?.length ?? 0) + (form?.payment?.errors?.length ?? 0) + (form?.amount?.errors?.length ?? 0) + (form?.expenseDate?.errors?.length ?? 0) + (form?.description?.errors?.length ?? 0) > 0}
+    {#if (form?.id?.errors?.length ?? 0) + (form?.categoryId?.errors?.length ?? 0) + (form?.payment?.errors?.length ?? 0) + (form?.amount?.errors?.length ?? 0) + (form?.expenseDate?.errors?.length ?? 0) + (form?.description?.errors?.length ?? 0) > 0}
       <div
         class="bg-red-50 border border-gray-200 p-4 rounded-lg shadow-md w-fit h-fit"
       >
         <h3 class="font-semibold text-red-700 mb-2">Errors</h3>
         <ul class="list-disc list-inside text-xs text-red-700 space-y-1">
+          {#if form?.id?.errors?.length}
+            {#each form.id.errors as error}
+              <li>{error}</li>
+            {/each}
+          {/if}
           {#if form?.categoryId?.errors?.length}
             {#each form.categoryId.errors as error}
               <li>{error}</li>

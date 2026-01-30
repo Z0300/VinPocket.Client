@@ -43,7 +43,9 @@
         <CellTable.Cell>
           {getPaymentMethodLabel(row.payment)}
         </CellTable.Cell>
-        <CellTable.Cell>{row.description}</CellTable.Cell>
+        <CellTable.Cell class="truncate max-w-xs"
+          >{row.description}</CellTable.Cell
+        >
         <CellTable.Cell>
           {new Date(
             row.expenseDate ? row.expenseDate : "",
