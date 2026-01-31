@@ -50,11 +50,14 @@
     >
       <form
         method="POST"
+        action="/?edit"
         use:enhance={() => {
           return async ({ result, update }) => {
             if (result.type === "success") {
-              toast.success("Expense updated successfully!");
-              await update();
+              toast.success("Expense updated successfully!", {
+                position: "top-right",
+              });
+              goto("/expenses");
             } else {
               await update();
             }

@@ -45,7 +45,9 @@
         use:enhance={() => {
           return async ({ result, update }) => {
             if (result.type === "success") {
-              toast.success("Expense created successfully!");
+              toast.success("Expense created successfully!", {
+                position: "top-right",
+              });
               await update();
             } else {
               await update();

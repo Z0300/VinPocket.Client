@@ -4,6 +4,8 @@
   import { goto } from "$app/navigation";
   import type { PageProps } from "./$types";
   import { getPaymentMethodLabel } from "$lib/utils";
+  import ConfirmDeleteDialog from "$lib/components/common/app-dialog.svelte";
+  import { enhance } from "$app/forms";
   let { data }: PageProps = $props();
 </script>
 
@@ -57,8 +59,16 @@
         <Button onclick={() => goto(`/expenses/${data.expense.id}/edit`)}>
           Edit
         </Button>
-
-        <Button variant="destructive">Delete</Button>
+        <ConfirmDeleteDialog
+          title="Delete Expense"
+          description="Are you sure you want to delete this expense?"
+          confirmText="Confirm"
+          action="?/delete"
+          name="id"
+          isIcon={false}
+          value={data.expense.id}
+          redirectTo="/expenses"
+        />
       </Field.Field>
     </Field.Group>
   </div>

@@ -37,22 +37,11 @@
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import PhilippinePesoIcon from "@lucide/svelte/icons/philippine-peso";
   import type { ComponentProps } from "svelte";
-  import { page } from "$app/state";
 
   let {
     ref = $bindable(null),
     ...restProps
   }: ComponentProps<typeof Sidebar.Root> = $props();
-
-  function isSubActive(url: string) {
-    const current = page.url.pathname;
-    return current === url || current.startsWith(`${url}/`);
-  }
-
-  function isGroupActive(items?: { url: string }[]) {
-    if (!items) return false;
-    return items.some((item) => isSubActive(item.url));
-  }
 </script>
 
 <Sidebar.Root {...restProps} bind:ref>
@@ -69,7 +58,7 @@
               </div>
               <div class="flex flex-col gap-0.5 leading-none">
                 <span class="font-medium">VinPocket</span>
-                <span class="text-xs">v1.0.0</span>
+                <span>v1.0.0</span>
               </div>
             </a>
           {/snippet}
@@ -83,10 +72,7 @@
       <Sidebar.Menu>
         {#each data.navMain as item (item.title)}
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton
-              class="font-medium"
-              isActive={isGroupActive(item.items)}
-            >
+            <Sidebar.MenuButton class="font-medium">
               {#snippet child({ props })}
                 <span {...props}>{item.title}</span>
               {/snippet}
@@ -96,7 +82,7 @@
               <Sidebar.MenuSub>
                 {#each item.items as subItem (subItem.title)}
                   <Sidebar.MenuSubItem>
-                    <Sidebar.MenuSubButton isActive={isSubActive(subItem.url)}>
+                    <Sidebar.MenuSubButton>
                       {#snippet child({ props })}
                         <a href={subItem.url} {...props}>
                           {subItem.title}
