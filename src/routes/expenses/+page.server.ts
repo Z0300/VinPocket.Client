@@ -10,13 +10,15 @@ export const load: PageServerLoad = async ({ url }) => {
   const pageNumber = Number(url.searchParams.get("page") ?? 1);
   const pageSize = Number(url.searchParams.get("pageSize") ?? 10);
 
-  const response = await get<PaginatedResponse<Expense>>(
-    `/api/expenses?
-      expenseDate=${expenseDate}&
-      sort=${sort}&fields=${fields}&
-      page=${pageNumber}&
-      pageSize=${pageSize}`,
-  );
+  const response = await get<PaginatedResponse<Expense>>("/api/expenses", {
+    params: {
+      expenseDate,
+      sort,
+      fields,
+      page: pageNumber,
+      pageSize,
+    },
+  });
 
   return { response };
 };
