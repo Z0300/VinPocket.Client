@@ -4,6 +4,7 @@
   import { getPaymentMethodLabel } from "$lib/utils";
   import ConfirmDeleteDialog from "$lib/components/common/app-dialog.svelte";
   import ExpenseTableSkeleton from "$lib/components/common/app-skeleton.svelte";
+  import AppPagination from "$lib/components/common/app-pagination.svelte";
   import * as CellTable from "$lib/components/ui/table";
   import type { PageProps } from "./$types";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -72,5 +73,13 @@
     {:else}
       <ExpenseTableSkeleton />
     {/if}
+  </div>
+  <div class="p-4 flex justify-end">
+    <AppPagination
+      pageNumber={data.response.page}
+      pageSize={data.response.pageSize}
+      totalCount={data.response.totalCount}
+      onPageChange={(page) => goto(`/expenses?page=${page}`)}
+    />
   </div>
 </div>
