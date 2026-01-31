@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from "./$types";
 import type { PaymentMethod } from "$lib/types/enums/PaymentMethod";
 import { updateExpenseSchema } from "$lib/schemas/UpdateExpense";
 import z from "zod";
-import { get, put } from "$lib/client";
+import { get, put, remove } from "$lib/client";
 import type { ExpenseWithCategory } from "$lib/types/ExpenseWithCategory";
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions = {
-  default: async ({ request, params }) => {
+  edit: async ({ request, params }) => {
     const rawData = Object.fromEntries(await request.formData());
 
     const parsedData = {

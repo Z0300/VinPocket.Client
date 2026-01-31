@@ -42,6 +42,7 @@
     </header>
 
     {@render children()}
+
     <Toaster />
   </Sidebar.Inset>
 </Sidebar.Provider>
